@@ -1,0 +1,10 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#18181B"/>
+  <circle cx="200" cy="160" r="60" fill="#3B82F6" opacity="0.2"/>
+  <circle cx="200" cy="160" r="50" fill="#3B82F6" opacity="0.3"/>
+  <path d="M200 120C183.431 120 170 133.431 170 150C170 166.569 183.431 180 200 180C216.569 180 230 166.569 230 150C230 133.431 216.569 120 200 120Z" fill="#3B82F6"/>
+  <path d="M140 280C140 246.863 166.863 220 200 220C233.137 220 260 246.863 260 280V300H140V280Z" fill="#3B82F6"/>
+  <text x="200" y="340" font-family="Arial, sans-serif" font-size="16" fill="#71717A" text-anchor="middle">
+    Agrega tu foto en /public/profile.jpg
+  </text>
+</svg>
