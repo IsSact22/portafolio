@@ -2,126 +2,194 @@
 
 import { Github, Linkedin, Mail, Download } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
-// 📝 PERSONALIZA AQUÍ TU INFORMACIÓN PRINCIPAL
-const heroData = {
-  greeting: "I'm",
-  name: 'Tu Nombre',
-  title: 'Backend Developer & Full Stack',
-  subtitle: 'Especializado en arquitecturas backend escalables, microservicios y APIs REST',
+// 📝 INTERFACES Y TIPOS
+interface SocialLinks {
+  github: string;
+  linkedin: string;
+  email: string;
+}
+
+interface HeroData {
+  greeting: string;
+  name: string;
+  title: string;
+  subtitle: string;
+  stack: string;
+  availability: string;
+  profileImage: string;
+  social: SocialLinks;
+  cv: string;
+}
+
+// 📝 CONFIGURACIÓN PRINCIPAL - PERSONALIZA AQUÍ
+const heroData: HeroData = {
+  greeting: "Hola, soy",
+  name: 'Isaac Hung',
+  title: 'Backend Developer',
+  subtitle: 'Especializado en arquitecturas backend escalables, microservicios y APIs REST con más de 8 años de experiencia desarrollando soluciones robustas y eficientes.',
   stack: 'Laravel • Node.js • PostgreSQL • Docker • Clean Architecture',
   availability: 'Disponible para proyectos',
-  // Agrega tu foto en /public/profile.jpg o usa una URL
-  profileImage: '/profile.png', // Cambia esto por tu foto real
+  profileImage: '/profile.png',
   social: {
-    github: 'https://github.com/yourusername',
-    linkedin: 'https://linkedin.com/in/yourusername',
-    email: 'your.email@example.com',
+    github: 'https://github.com/IsSact22',
+    linkedin: 'www.linkedin.com/in/isaachung-dev',
+    email: 'aisaachung@gmail.com',
   },
-  cv: '/cv.pdf',
+  cv: '/pdf/Curriculum-isaachung.pdf',
 };
 
 export default function Hero() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const handleContactClick = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center pt-16 bg-zinc-950 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.15) 1px, transparent 0)',
-          backgroundSize: '40px 40px'
-        }}></div>
+    <section 
+      id="home" 
+      className="min-h-screen flex items-center justify-center pt-20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-hidden"
+    >
+      {/* Patrón de fondo mejorado */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div 
+          className="absolute inset-0" 
+          style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, #ffffff 1px, transparent 0)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
       </div>
+
+      {/* Elementos decorativos de fondo */}
+      <div className="absolute top-1/4 -left-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
       
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
-        <div className="grid md:grid-cols-[1fr,1.2fr] gap-16 items-center">
-          {/* Left side - Text content */}
-          <div className="space-y-8 text-center md:text-left order-2 md:order-1">
-            {/* Main Title */}
-            <div>
-              <p className="text-zinc-500 text-base mb-3">{heroData.greeting}</p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-3">
-                {heroData.name}
-              </h1>
-              <h2 className="text-xl md:text-2xl font-medium text-zinc-400 mb-6">
-                {heroData.title}
-              </h2>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Contenido de texto - MEJORADO EL ESPACIADO */}
+          <div className="space-y-10 text-center lg:text-left order-2 lg:order-1">
+            {/* Encabezado principal - MÁS ESPACIADO */}
+            <div className="space-y-6">
+              <p className="text-zinc-400 text-lg font-medium tracking-wide mb-2">
+                {heroData.greeting}
+              </p>
+              
+              <div className="space-y-4">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
+                  {heroData.name}
+                </h1>
+
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-yellow-500 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent leading-relaxed">
+                  {heroData.title}
+                </h2>
+              </div>
             </div>
 
-            {/* Subtitle */}
-            <p className="text-base text-zinc-400 leading-relaxed max-w-lg">
-              {heroData.subtitle}
-            </p>
-
-            {/* CTA Button */}
-            <div className="pt-2">
-              <a
-                href="#contact"
-                className="inline-flex items-center px-8 py-3 bg-yellow-500 hover:bg-yellow-400 text-zinc-950 rounded-lg font-semibold transition-all hover:scale-105 shadow-lg"
-              >
-                Contact Me
-              </a>
+            {/* Subtítulo y descripción - MÁS MARGENES */}
+            <div className="pt-4">
+              <p className="text-xl text-zinc-300 leading-relaxed max-w-2xl font-light tracking-wide">
+                {heroData.subtitle}
+              </p>
             </div>
 
-            {/* Social Links */}
-            <div className="flex gap-4 justify-center md:justify-start pt-4">
-              <a
-                href={heroData.social.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-white transition-colors"
-                aria-label="GitHub"
+            {/* Stack tecnológico - MEJOR ESPACIADO */}
+            <div className="pt-6">
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                {heroData.stack.split('•').map((tech, index) => (
+                  <span
+                    key={index}
+                    className="px-5 py-3 bg-zinc-800/50 border border-zinc-700/50 rounded-xl text-zinc-300 text-base font-medium backdrop-blur-sm hover:bg-zinc-700/50 transition-all duration-300 hover:scale-105"
+                  >
+                    {tech.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Disponibilidad - MÁS SEPARACIÓN */}
+            <div className="flex items-center justify-center lg:justify-start gap-3 text-zinc-400 pt-4">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-base font-medium">{heroData.availability}</span>
+            </div>
+
+            {/* Botones de acción - MÁS ESPACIADO */}
+            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start pt-8">
+              <button
+                onClick={handleContactClick}
+                className="group relative inline-flex items-center justify-center px-10 py-5 bg-yellow-500 hover:bg-yellow-400 text-zinc-950 font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-yellow-500/25 active:scale-95 min-w-[180px]"
               >
-                <Github size={22} />
-              </a>
-              <a
-                href={heroData.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-white transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={22} />
-              </a>
-              <a
-                href={`mailto:${heroData.social.email}`}
-                className="text-zinc-400 hover:text-white transition-colors"
-                aria-label="Email"
-              >
-                <Mail size={22} />
-              </a>
+                <span className="relative z-10 tracking-wide">Contactar Ahora</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </button>
+              
               <a
                 href={heroData.cv}
                 download
-                className="text-zinc-400 hover:text-white transition-colors"
-                aria-label="Descargar CV"
+                className="inline-flex items-center justify-center gap-3 px-10 py-5 border-2 border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white font-semibold text-lg rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 group min-w-[180px]"
               >
-                <Download size={22} />
+                <Download size={22} className="group-hover:animate-bounce transition-transform" />
+                <span className="tracking-wide">Descargar CV</span>
               </a>
+            </div>
+
+            {/* Enlaces sociales - MÁS SEPARACIÓN */}
+            <div className="flex gap-5 justify-center lg:justify-start pt-10">
+              {[
+                { icon: Github, href: heroData.social.github, label: 'GitHub' },
+                { icon: Linkedin, href: heroData.social.linkedin, label: 'LinkedIn' },
+                { icon: Mail, href: `mailto:${heroData.social.email}`, label: 'Email' },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-700/50 hover:border-zinc-500 backdrop-blur-sm transition-all duration-300 hover:scale-110"
+                  aria-label={label}
+                >
+                  <Icon size={26} className="group-hover:scale-110 transition-transform duration-200" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Right side - Profile Image */}
-          <div className="relative flex justify-center md:justify-end order-1 md:order-2">
+          {/* Imagen de perfil */}
+          <div className="relative flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative w-full max-w-lg">
-              {/* Image container - más grande y prominente */}
-              <div className="relative aspect-square rounded-3xl overflow-hidden border border-zinc-800/50 bg-zinc-900 shadow-2xl">
-                <Image
-                  src={heroData.profileImage}
-                  alt={heroData.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                {/* Subtle overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/40 via-transparent to-transparent"></div>
+              <div className={`
+                relative aspect-square rounded-3xl overflow-hidden border-2 border-zinc-700/50 bg-zinc-800/20 shadow-2xl backdrop-blur-sm
+                transition-all duration-700 ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+              `}>
+                {!imageError ? (
+                  <Image
+                    src={heroData.profileImage}
+                    alt={`Foto de perfil de ${heroData.name}`}
+                    fill
+                    className="object-cover object-center"
+                    priority
+                    quality={90}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-400">
+                    <span className="text-lg font-medium">Imagen no disponible</span>
+                  </div>
+                )}
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-transparent" />
               </div>
 
-              {/* Decorative elements */}
-              <div className="absolute -z-10 top-8 -right-8 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
-              <div className="absolute -z-10 -bottom-8 -left-8 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+              {/* Elementos decorativos */}
+              <div className="absolute -top-8 -right-8 w-40 h-40 bg-yellow-500/10 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl" />
             </div>
           </div>
         </div>
