@@ -11,6 +11,9 @@ import errorHandler from "./infrastructure/webserver/express/middlewares/errorHa
 // Importar rutas
 import profileRoutes from "./infrastructure/webserver/express/routes/profileRoutes.js";
 import projectRoutes from "./infrastructure/webserver/express/routes/projectRoutes.js";
+import skillsRoutes from "./infrastructure/webserver/express/routes/skillsRoutes.js";
+import experienceRoutes from "./infrastructure/webserver/express/routes/experienceRoutes.js";
+import contactRoutes from "./infrastructure/webserver/express/routes/contactRoutes.js";
 
 const app = express();
 
@@ -41,6 +44,9 @@ app.get("/api/health", (req, res) => {
 // 📦 Rutas principales
 app.use("/api/profile", profileRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/skills", skillsRoutes);
+app.use("/api/experience", experienceRoutes);
+app.use("/api/contact", contactRoutes);
 
 // 🚫 Manejo de rutas no encontradas
 app.all("*", (req, res) => {
