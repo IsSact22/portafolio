@@ -213,17 +213,6 @@ npm run prisma:seed      # Ejecutar seed
 npm start                # Iniciar en producción
 ```
 
-## 🌍 Variables de Entorno
-
-Crea un archivo `.env` en la carpeta `backend/`:
-
-```env
-PORT=3000
-NODE_ENV=development
-DATABASE_URL=postgresql://postgres:1218@localhost:5432/portafolio?schema=public
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-```
-
 ## 🔒 Seguridad
 
 - ✅ Helmet para headers HTTP seguros
@@ -261,15 +250,7 @@ Este proyecto está bajo la Licencia MIT.
 
 **Isaac Developer**
 
-- GitHub: [@tuusuario](https://github.com/tuusuario)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/tuusuario)
-
-## 🙏 Agradecimientos
-
-- Clean Architecture por Robert C. Martin
-- Prisma por su excelente ORM
-- La comunidad de Node.js
-
----
+- GitHub: [@IsSact22](https://github.com/IsSact22)
+- LinkedIn: [Isaac Developer](https://linkedin.com/in/isaachung-dev)
 
 ⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub
