@@ -4,8 +4,11 @@ export interface Project {
   description: string;
   longDescription?: string;
   technologies: string[];
-  imageUrl?: string;
+  image?: string;
+  imageUrl?: string; // Alias para compatibilidad
+  gallery?: string[];
   demoUrl?: string;
+  repoUrl?: string;
   githubUrl?: string;
   status: 'draft' | 'published' | 'archived';
   featured: boolean;
@@ -22,8 +25,11 @@ export interface CreateProjectDto {
   description: string;
   longDescription?: string;
   technologies: string[];
+  image?: string;
   imageUrl?: string;
+  gallery?: string[];
   demoUrl?: string;
+  repoUrl?: string;
   githubUrl?: string;
   status?: 'draft' | 'published' | 'archived';
   featured?: boolean;
@@ -38,8 +44,11 @@ export interface UpdateProjectDto {
   description?: string;
   longDescription?: string;
   technologies?: string[];
+  image?: string;
   imageUrl?: string;
+  gallery?: string[];
   demoUrl?: string;
+  repoUrl?: string;
   githubUrl?: string;
   status?: 'draft' | 'published' | 'archived';
   featured?: boolean;

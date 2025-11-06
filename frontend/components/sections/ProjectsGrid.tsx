@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import { ExternalLink, Github } from 'lucide-react';
 import { useProjectsStore } from '../../store/useProjectsStore';
 import { Card, CardBody, CardHeader } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { ProjectImage } from '../ui/ProjectImage';
 
 
 export const ProjectsGrid: React.FC = () => {
@@ -48,16 +48,13 @@ export const ProjectsGrid: React.FC = () => {
           {featuredProjects.map((project) => (
             <Card key={project.id} hover className="overflow-hidden">
               {/* Project Image */}
-              {project.imageUrl && (
-                <div className="h-48 overflow-hidden relative">
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-              )}
+              <div className="h-48 overflow-hidden relative">
+                <ProjectImage
+                  src={project.image || project.imageUrl}
+                  alt={project.title}
+                  className="hover:scale-110 transition-transform duration-300"
+                />
+              </div>
 
               <CardHeader>
                 {/* Project Title */}
@@ -99,10 +96,10 @@ export const ProjectsGrid: React.FC = () => {
                       </a>
                     </Button>
                   )}
-                  {project.githubUrl && (
+                  {(project.repoUrl || project.githubUrl) && (
                     <Button variant="outline" size="sm" className="flex-1">
                       <a
-                        href={project.githubUrl}
+                        href={project.repoUrl || project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2"
