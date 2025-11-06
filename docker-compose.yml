@@ -53,25 +53,37 @@ services:
       retries: 3
       start_period: 40s
 
-  # Frontend (Next.js)
+  # Frontend (Next.js) - Development
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: builder
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:3000/api
     container_name: portfolio_frontend
     restart: unless-stopped
     ports:
-      - "3001:3000"
+      - "3001:3001"
     environment:
+      - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:3000/api
     volumes:
       - ./frontend:/app
       - /app/node_modules
       - /app/.next
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - portfolio_network
+    command: npm run dev -- -p 3001
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
 
 volumes:
   postgres_data:
