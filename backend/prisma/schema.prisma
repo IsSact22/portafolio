@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo Profile - Información personal del portafolio
+model Profile {
+  id         String   @id @default(uuid())
+  fullName   String   @map("full_name") @db.VarChar(100)
+  title      String   @db.VarChar(150)
+  bio        String?  @db.Text
+  email      String   @unique @db.VarChar(255)
+  phone      String?  @db.VarChar(50)
+  location   String?  @db.VarChar(100)
+  avatar     String?  @db.Text
+  resume     String?  @db.Text
+  
+  // Social Links como JSON
+  socialLinks Json?   @map("social_links")
+  
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("profiles")
+  @@index([email])
+  @@index([isActive])
+}
+
+// Modelo Project - Proyectos del portafolio
+model Project {
+  id              String   @id @default(uuid())
+  title           String   @db.VarChar(200)
+  description     String   @db.Text
+  longDescription String?  @map("long_description") @db.Text
+  
+  // Tecnologías como array de strings
+  technologies    String[] @db.VarChar(50)
+  
+  category        String   @db.VarChar(50)
+  image           String?  @db.Text
+  gallery         String[] @db.Text
+  demoUrl         String?  @map("demo_url") @db.Text
+  repoUrl         String?  @map("repo_url") @db.Text
+  
+  featured        Boolean  @default(false)
+  status          String   @default("draft") @db.VarChar(20)
+  order           Int      @default(0)
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+  @@index([status])
+  @@index([featured])
+  @@index([category])
+}
+
+// Modelo Skill - Habilidades técnicas
+model Skill {
+  id                String   @id @default(uuid())
+  name              String   @db.VarChar(100)
+  category          String   @db.VarChar(50)
+  level             String   @db.VarChar(20)
+  icon              String?  @db.VarChar(100)
+  order             Int      @default(0)
+  yearsOfExperience Int?     @map("years_of_experience")
+  
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("skills")
+  @@index([category])
+  @@index([level])
+}
+
+// Modelo Experience - Experiencia laboral
+model Experience {
+  id           String    @id @default(uuid())
+  company      String    @db.VarChar(150)
+  position     String    @db.VarChar(150)
+  description  String    @db.Text
+  technologies String[]  @db.VarChar(50)
+  
+  startDate    DateTime  @map("start_date")
+  endDate      DateTime? @map("end_date")
+  isCurrent    Boolean   @default(false) @map("is_current")
+  
+  location     String?   @db.VarChar(100)
+  type         String    @db.VarChar(50)
+  achievements String[]  @db.Text
+  
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("experiences")
+  @@index([isCurrent])
+}
+
+// Modelo Contact - Mensajes de contacto
+model Contact {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(255)
+  subject   String   @db.VarChar(200)
+  message   String   @db.Text
+  status    String   @default("new") @db.VarChar(20)
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("contacts")
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Modelo Admin - Usuarios administradores
+model Admin {
+  id        String    @id @default(uuid())
+  username  String    @unique @db.VarChar(50)
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  role      String    @default("admin") @db.VarChar(20)
+  lastLogin DateTime? @map("last_login")
+  
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("admins")
+  @@index([email])
+  @@index([username])
+}

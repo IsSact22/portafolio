@@ -1,0 +1,93 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: portfolio_postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"  # Puerto externo 5433, interno 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1218
+      POSTGRES_DB: portafolio
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - portfolio_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development  # Usar etapa de desarrollo
+    container_name: portfolio_backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      # Conectar a PostgreSQL en Docker (mismo network)
+      - DATABASE_URL=postgresql://postgres:1218@postgres:5432/portafolio?schema=public
+      - JWT_SECRET=your-super-secret-jwt-key-change-this
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - /app/prisma/migrations  # Preservar migraciones
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - portfolio_network
+    command: sh -c "npx prisma migrate deploy && npm run dev"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+  # Frontend (Next.js) - Development
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: builder
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+    container_name: portfolio_frontend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - portfolio_network
+    command: npm run dev -- -p 3001
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+
+networks:
+  portfolio_network:
+    driver: bridge

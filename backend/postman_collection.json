@@ -1,0 +1,405 @@
+{
+  "info": {
+    "name": "Portfolio API - Backend",
+    "description": "Colección completa de endpoints para el API del portafolio dinámico con Node.js, Express, PostgreSQL y Prisma",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "profile_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "project_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Check API Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica el estado de salud del API y la conexión a la base de datos"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Create Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"profile_id\", jsonData.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Isaac Developer\",\n  \"title\": \"Backend Developer | Node.js & PostgreSQL Specialist\",\n  \"bio\": \"Desarrollador backend apasionado por crear APIs escalables con Clean Architecture, PostgreSQL y Docker. Especializado en Node.js, Express y arquitecturas limpias.\",\n  \"email\": \"isaac@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Ciudad, País\",\n  \"avatar\": \"https://avatars.githubusercontent.com/u/12345678\",\n  \"resume\": \"https://drive.google.com/file/d/tu-cv.pdf\",\n  \"socialLinks\": {\n    \"github\": \"https://github.com/tuusuario\",\n    \"linkedin\": \"https://linkedin.com/in/tuusuario\",\n    \"twitter\": \"https://twitter.com/tuusuario\",\n    \"portfolio\": \"https://tuportafolio.com\",\n    \"instagram\": \"https://instagram.com/tuusuario\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Crea un nuevo perfil. Solo puede existir un perfil activo a la vez."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Active Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Obtiene el perfil activo actual"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Backend Developer | Node.js, PostgreSQL & Docker Expert\",\n  \"bio\": \"Desarrollador backend senior con más de 5 años de experiencia creando APIs escalables y robustas. Especializado en arquitecturas limpias, microservicios y DevOps.\",\n  \"phone\": \"+9876543210\",\n  \"location\": \"Nueva Ciudad, País\",\n  \"socialLinks\": {\n    \"github\": \"https://github.com/nuevousuario\",\n    \"linkedin\": \"https://linkedin.com/in/nuevousuario\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/{{profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "{{profile_id}}"]
+            },
+            "description": "Actualiza el perfil existente. Solo envía los campos que quieres actualizar."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects (Coming Soon)",
+      "item": [
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/projects?page=1&limit=10&status=published&featured=true",
+              "host": ["{{base_url}}"],
+              "path": ["projects"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número de página"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Proyectos por página"
+                },
+                {
+                  "key": "status",
+                  "value": "published",
+                  "description": "Filtrar por estado: draft, published"
+                },
+                {
+                  "key": "featured",
+                  "value": "true",
+                  "description": "Solo proyectos destacados"
+                },
+                {
+                  "key": "category",
+                  "value": "Backend",
+                  "description": "Filtrar por categoría",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "portfolio",
+                  "description": "Buscar en título y descripción",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Obtiene todos los proyectos con paginación y filtros"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Project by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "{{project_id}}"]
+            },
+            "description": "Obtiene un proyecto específico por su ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Project",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"project_id\", jsonData.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Portfolio Dinámico con Node.js y PostgreSQL\",\n  \"description\": \"API REST completa para portafolio dinámico con Clean Architecture\",\n  \"longDescription\": \"Proyecto fullstack que implementa un portafolio completamente dinámico y gestionable desde un backend modular. Utiliza Node.js, Express, PostgreSQL, Prisma y Docker para crear una solución escalable y profesional.\",\n  \"technologies\": [\"Node.js\", \"Express\", \"PostgreSQL\", \"Prisma\", \"Docker\", \"Clean Architecture\"],\n  \"category\": \"Backend\",\n  \"image\": \"https://example.com/project-image.jpg\",\n  \"gallery\": [\n    \"https://example.com/screenshot1.jpg\",\n    \"https://example.com/screenshot2.jpg\"\n  ],\n  \"demoUrl\": \"https://portfolio-demo.com\",\n  \"repoUrl\": \"https://github.com/usuario/portfolio\",\n  \"featured\": true,\n  \"status\": \"published\",\n  \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects",
+              "host": ["{{base_url}}"],
+              "path": ["projects"]
+            },
+            "description": "Crea un nuevo proyecto"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Project",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Portfolio Dinámico - Actualizado\",\n  \"description\": \"API REST mejorada con nuevas funcionalidades\",\n  \"featured\": false,\n  \"status\": \"published\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "{{project_id}}"]
+            },
+            "description": "Actualiza un proyecto existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Project",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/projects/{{project_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["projects", "{{project_id}}"]
+            },
+            "description": "Elimina un proyecto (soft delete)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Skills (Coming Soon)",
+      "item": [
+        {
+          "name": "Get All Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/skills?category=Backend",
+              "host": ["{{base_url}}"],
+              "path": ["skills"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Backend",
+                  "description": "Filtrar por categoría"
+                }
+              ]
+            },
+            "description": "Obtiene todas las habilidades, opcionalmente filtradas por categoría"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Skill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Node.js\",\n  \"category\": \"Backend\",\n  \"level\": \"Expert\",\n  \"icon\": \"nodejs\",\n  \"order\": 1,\n  \"yearsOfExperience\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/skills",
+              "host": ["{{base_url}}"],
+              "path": ["skills"]
+            },
+            "description": "Crea una nueva habilidad"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Experience (Coming Soon)",
+      "item": [
+        {
+          "name": "Get All Experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/experience",
+              "host": ["{{base_url}}"],
+              "path": ["experience"]
+            },
+            "description": "Obtiene toda la experiencia laboral ordenada por fecha"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Tech Company Inc.\",\n  \"position\": \"Senior Backend Developer\",\n  \"description\": \"Desarrollo de APIs REST escalables y microservicios\",\n  \"technologies\": [\"Node.js\", \"PostgreSQL\", \"Docker\", \"AWS\"],\n  \"startDate\": \"2020-01-15\",\n  \"endDate\": null,\n  \"isCurrent\": true,\n  \"location\": \"Ciudad, País\",\n  \"type\": \"Full-time\",\n  \"achievements\": [\n    \"Implementé arquitectura de microservicios que redujo tiempos de respuesta en 40%\",\n    \"Lideré equipo de 5 desarrolladores\",\n    \"Migré sistema legacy a arquitectura moderna\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/experience",
+              "host": ["{{base_url}}"],
+              "path": ["experience"]
+            },
+            "description": "Crea un nuevo registro de experiencia laboral"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contact (Coming Soon)",
+      "item": [
+        {
+          "name": "Send Contact Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"subject\": \"Consulta sobre proyecto\",\n  \"message\": \"Hola, me interesa saber más sobre tus servicios de desarrollo backend.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contact",
+              "host": ["{{base_url}}"],
+              "path": ["contact"]
+            },
+            "description": "Envía un mensaje de contacto"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Messages (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/contact?status=new",
+              "host": ["{{base_url}}"],
+              "path": ["contact"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "new",
+                  "description": "Filtrar por estado: new, read, replied"
+                }
+              ]
+            },
+            "description": "Obtiene todos los mensajes de contacto (requiere autenticación)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
