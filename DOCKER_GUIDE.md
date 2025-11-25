@@ -16,7 +16,7 @@ Esta guía te ayudará a ejecutar el backend completo en contenedores Docker.
 │                                                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
 │  │  PostgreSQL  │  │   Backend    │  │ Frontend  │ │
-│  │   Port 5432  │◄─│   Port 3000  │◄─│Port 3001  │ │
+│  │   Port 5432  │◄─│   Port 5000  │◄─│Port 3001  │ │
 │  │              │  │              │  │           │ │
 │  └──────────────┘  └──────────────┘  └───────────┘ │
 │         ▲                                            │
@@ -109,7 +109,7 @@ El archivo `docker-compose.yml` ya tiene las variables configuradas:
 - `JWT_SECRET=your-super-secret-jwt-key-change-this`
 
 **Frontend:**
-- `NEXT_PUBLIC_API_URL=http://localhost:3000/api`
+- `NEXT_PUBLIC_API_URL=http://localhost:5000/api`
 
 ### Puertos Expuestos
 
@@ -163,13 +163,13 @@ Una vez que los contenedores estén corriendo:
 ### Health Check
 
 ```bash
-curl http://localhost:3000/api/health
+curl http://localhost:5000/api/health
 ```
 
 ### Crear un Perfil
 
 ```bash
-curl -X POST http://localhost:3000/api/profile \
+curl -X POST http://localhost:5000/api/profile \
   -H "Content-Type: application/json" \
   -d '{
     "fullName": "Isaac Developer",
@@ -206,12 +206,12 @@ docker-compose up -d backend
 
 **Solución:**
 ```bash
-# Ver qué proceso usa el puerto 3000
-netstat -ano | findstr :3000
+# Ver qué proceso usa el puerto 5000
+netstat -ano | findstr :5000
 
 # Detener el proceso o cambiar el puerto en docker-compose.yml
 ports:
-  - "3001:3000"  # Cambiar 3000 a 3001
+  - "3001:5000"  # Cambiar 5000 a 3001
 ```
 
 ### Las migraciones no se ejecutan
@@ -317,7 +317,7 @@ Crear archivo `.env.production`:
 
 ```env
 NODE_ENV=production
-PORT=3000
+PORT=5000
 DATABASE_URL=postgresql://user:password@host:5432/db?schema=public
 JWT_SECRET=super-secret-production-key-min-32-chars
 ```
@@ -335,7 +335,7 @@ Antes de considerar que todo está funcionando:
 
 - [ ] PostgreSQL está corriendo: `docker-compose ps postgres`
 - [ ] Backend está corriendo: `docker-compose ps backend`
-- [ ] Health check responde: `curl http://localhost:3000/api/health`
+- [ ] Health check responde: `curl http://localhost:5000/api/health`
 - [ ] Migraciones aplicadas: `docker exec -it portfolio_backend npx prisma migrate status`
 - [ ] Puedes crear un perfil via API
 - [ ] Los logs no muestran errores: `docker-compose logs backend`

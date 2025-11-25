@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FaGithub, FaLinkedinIn, FaTwitter, FaEnvelope, FaWhatsapp } from 'react-icons/fa'; // Agregué MessageCircle
+import { FaGithub, FaLinkedinIn, FaTwitter, FaWhatsapp } from 'react-icons/fa'; // Agregué MessageCircle
 import { useProfileStore } from '../../store/useProfileStore';
 
 export const Footer: React.FC = () => {
