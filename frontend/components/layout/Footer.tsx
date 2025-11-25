@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FaGithub, FaLinkedinIn, FaTwitter, FaWhatsapp } from 'react-icons/fa'; // Agregué MessageCircle
+import { Github, Linkedin, Twitter, MessageCircle } from 'lucide-react';
 import { useProfileStore } from '../../store/useProfileStore';
 
 export const Footer: React.FC = () => {
@@ -9,30 +9,22 @@ export const Footer: React.FC = () => {
 
   const socialLinks = [
     { 
-      icon: FaGithub, 
-      // Accedemos a profile.socialLinks.github
+      icon: Github, 
       href: profile?.socialLinks?.github, 
       label: 'GitHub' 
     },
     { 
-      icon: FaLinkedinIn, 
+      icon: Linkedin, 
       href: profile?.socialLinks?.linkedin, 
       label: 'LinkedIn' 
     },
     { 
-      icon: FaTwitter, 
+      icon: Twitter, 
       href: profile?.socialLinks?.twitter, 
       label: 'Twitter' 
     },
-    // { 
-    //   icon: FaEnvelope, 
-    //   // El email suele estar en la raíz del perfil
-    //   href: profile?.email ? `mailto:${profile.email}` : null, 
-    //   label: 'Email' 
-    // },
     {
-      icon: FaWhatsapp,
-      // Generamos el link de WhatsApp si existe el teléfono
+      icon: MessageCircle,
       href: profile?.phone ? `https://wa.me/${profile.phone.replace(/[^0-9]/g, '')}` : null,
       label: 'WhatsApp'
     }
