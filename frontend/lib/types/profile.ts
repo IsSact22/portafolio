@@ -9,9 +9,16 @@ export interface Profile {
   github?: string;
   linkedin?: string;
   twitter?: string;
+  // Objeto anidado para redes sociales (camelCase)
+  socialLinks?: {
+    github?: string;
+    linkedin?: string;
+    twitter?: string;
+    instagram?: string; // Agregado por si acaso
+  };
   website?: string;
   avatar?: string;
-  resumeUrl?: string;
+  resume?: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -29,7 +36,7 @@ export interface CreateProfileDto {
   twitter?: string;
   website?: string;
   avatar?: string;
-  resumeUrl?: string;
+  resume?: string;
   isActive?: boolean;
 }
 

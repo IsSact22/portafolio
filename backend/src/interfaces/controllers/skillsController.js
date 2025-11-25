@@ -6,9 +6,27 @@ import deleteSkillUseCase from "../../application/skills/deleteSkillUseCase.js";
 
 class SkillsController {
   // Crear una nueva skill
+// Crear una nueva skill (o múltiples skills si se envía un array)
   async create(req, res, next) {
     try {
-      const skill = await createSkillUseCase(req.body);
+      const data = req.body;
+
+      // 1. VERIFICAMOS SI ES UN ARRAY (Carga Masiva)
+      if (Array.isArray(data)) {
+        // Reutilizamos tu caso de uso para cada elemento del array
+        const skills = await Promise.all(
+          data.map((skillData) => createSkillUseCase(skillData))
+        );
+
+        return res.status(201).json({
+          success: true,
+          message: `${skills.length} skills creadas exitosamente`,
+          data: skills,
+        });
+      }
+
+      // 2. SI NO ES ARRAY, ES UNA SOLA SKILL (Tu lógica original)
+      const skill = await createSkillUseCase(data);
 
       res.status(201).json({
         success: true,

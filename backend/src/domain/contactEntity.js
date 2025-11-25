@@ -46,10 +46,6 @@ export default class Contact {
       errors.push("El mensaje es requerido");
     }
 
-    if (this.message && this.message.length < 10) {
-      errors.push("El mensaje debe tener al menos 10 caracteres");
-    }
-
     const validStatuses = ["new", "read", "replied"];
     if (!validStatuses.includes(this.status)) {
       errors.push("Estado inválido. Debe ser: new, read o replied");

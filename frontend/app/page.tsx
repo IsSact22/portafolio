@@ -6,7 +6,6 @@ import { ProjectsGrid } from '../components/sections/ProjectsGrid';
 import { SkillsSection } from '../components/sections/SkillsSection';
 import { ExperienceTimeline } from '../components/sections/ExperienceTimeline';
 import { ContactForm } from '../components/sections/ContactForm';
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">

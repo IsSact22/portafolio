@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Mail, MapPin, Phone, Download, ExternalLink } from 'lucide-react';
+import { Mail, MapPin, Phone, Download, ExternalLink, Briefcase, CircleUserRound } from 'lucide-react';
 import { useProfileStore } from '../../store/useProfileStore';
 import { Card, CardBody } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -42,34 +42,48 @@ export const About: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Bio Card */}
-          <Card>
-            <CardBody className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Mi Historia</h3>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {profile?.bio || 'Desarrollador apasionado por crear soluciones innovadoras y eficientes.'}
-              </p>
+          {/* Columna 1: Bio & Historia */}
+          <Card className="h-full">
+            {/* Aumenté el padding a p-10 para más espacio interno */}
+            <CardBody className="p-8 sm:p-10 flex flex-col h-full">
               
-              {/* Resume Download */}
-              {profile?.resumeUrl && (
-                <Button variant="primary" size="md" className="w-full sm:w-auto">
-                  <a
-                    href={profile.resumeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    <Download size={20} />
-                    Descargar CV
-                  </a>
-                </Button>
-              )}
+              {/* Agregué 'mt-2' para despegarlo un poco más del borde superior visualmente */}
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2 mt-2">
+                <Briefcase className="text-gray-400" size={24} />
+                Mi Historia
+              </h3>
+              
+              <div className="text-gray-700 leading-relaxed mb-8 flex-grow whitespace-pre-line text-justify">
+                {profile?.bio || 'Desarrollador apasionado por crear soluciones innovadoras y eficientes.'}
+              </div>
+              
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                {/* SOLUCIÓN BOTÓN: Validamos ambas posibilidades de nombre (resume o resumeUrl) */}
+                {(profile?.resume) && (
+                  <Button variant="primary" size="md" className="w-full sm:w-auto shadow-lg shadow-blue-500/30 transition-shadow">
+                    <a
+                      /* Usamos el que exista */
+                      href={profile.resume} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <Download size={20} />
+                      Descargar CV
+                    </a>
+                  </Button>
+                )}
+              </div>
             </CardBody>
           </Card>
 
           {/* Contact Info Card */}
           <Card>
-            <CardBody className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Información de Contacto</h3>
+            <CardBody className="p-8 sm:p-10 flex flex-col h-full">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2 mt-2">
+                <CircleUserRound className="text-gray-400" size={24} />
+                Información de Contacto
+              </h3>
               <div className="space-y-4">
                 {/* Email */}
                 {profile?.email && (

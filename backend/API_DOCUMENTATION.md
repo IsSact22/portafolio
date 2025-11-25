@@ -43,7 +43,11 @@ JWT_SECRET=your-super-secret-jwt-key
 ### Docker Setup
 
 ```bash
-# Desde la raíz del proyecto
+
+# Construir e iniciar
+docker-compose up --build -d
+
+# Iniciar servicios
 docker-compose up -d
 
 # Ver logs
