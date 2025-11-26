@@ -1,40 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { useContactStore } from '../../store/useContactStore';
-import { Input, TextArea } from '../ui/Input';
+import React, { useEffect } from 'react';
+import { MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { useProfileStore } from '../../store/useProfileStore';
+import { Card, CardBody } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Card, CardBody, CardHeader } from '../ui/Card';
 
 export const ContactForm: React.FC = () => {
-  const { loading, error, success, sendMessage, clearState } = useContactStore();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
+  const { profile, fetchProfile } = useProfileStore();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await sendMessage(formData);
+  const handleWhatsAppClick = () => {
+    if (!profile?.phone) return;
     
-    if (!error) {
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-      });
-    }
+    const formattedPhone = profile.phone.replace(/[^0-9]/g, '');
+    const message = encodeURIComponent('¡Hola! Me interesa contactarte para un proyecto.');
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${message}`;
+    
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -44,104 +30,38 @@ export const ContactForm: React.FC = () => {
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Contacto</h2>
           <p className="text-lg text-gray-600">
-            ¿Tienes un proyecto en mente? ¡Hablemos!
+            ¿Tienes un proyecto en mente? ¡Hablemos por WhatsApp!
           </p>
         </div>
 
-        {/* Contact Form */}
-        <Card>
-          <CardHeader>
-            <h3 className="text-2xl font-bold text-gray-900">Envíame un mensaje</h3>
-          </CardHeader>
-          <CardBody>
-            {/* Success Message */}
-            {success && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-                <CheckCircle className="text-green-600" size={24} />
-                <div>
-                  <p className="text-green-800 font-semibold">¡Mensaje enviado!</p>
-                  <p className="text-green-700 text-sm">Te responderé lo antes posible.</p>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+          {/* WhatsApp Card */}
+          <Card className="bg-linear-to-br flex item-center justify-center from-green-50 to-green-100 border-2 border-green-200">
+            <CardBody className="p-8 text-center">
+              <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <MessageCircle size={40} className="text-white" />
               </div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-                <AlertCircle className="text-red-600" size={24} />
-                <div>
-                  <p className="text-red-800 font-semibold">Error al enviar</p>
-                  <p className="text-red-700 text-sm">{error}</p>
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1  text-black  md:grid-cols-2 gap-6">
-                <Input
-                  label="Nombre"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Tu nombre"
-                  required
-                />
-                <Input
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="tu@email.com"
-                  required
-                />
-              </div>
-
-              <Input
-                label="Asunto"
-                type="text"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                className="text-black"
-                placeholder="¿De qué quieres hablar?"
-                required
-              />
-
-              <TextArea
-                label="Mensaje"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                className="text-black"
-                placeholder="Cuéntame sobre tu proyecto..."
-                rows={6}
-                required
-              />
-
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Escríbeme por WhatsApp
+              </h3>
+              <p className="text-gray-700 mb-6">
+                La forma más rápida de contactarme. Te respondo en minutos.
+              </p>
               <Button
-                type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full"
-                disabled={loading}
+                className="w-full bg-green-600 hover:bg-green-700"
+                onClick={handleWhatsAppClick}
+                disabled={!profile?.phone}
               >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Enviando...
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    <Send size={20} />
-                    Enviar Mensaje
-                  </span>
-                )}
+                <span className="flex items-center justify-center gap-2">
+                  <MessageCircle size={20} />
+                  Abrir WhatsApp
+                </span>
               </Button>
-            </form>
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </section>
   );

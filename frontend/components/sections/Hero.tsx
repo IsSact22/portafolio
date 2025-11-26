@@ -76,14 +76,6 @@ export const Hero: React.FC = () => {
                 <Linkedin size={24} />
               </a>
             )}
-            {profile?.email && (
-              <a
-                href={`mailto:${profile.email}`}
-                className="p-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
-              >
-                <Mail size={24} />
-              </a>
-            )}
           </div>
 
           {/* CTA Buttons */}
