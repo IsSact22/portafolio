@@ -41,8 +41,8 @@ const fileFormat = winston.format.combine(
   winston.format.json()
 );
 
-// Transporte para archivos con rotación diaria
-const fileRotateTransport = new DailyRotateFile({
+// Transporte para archivos con rotación diaria (solo en desarrollo)
+const fileRotateTransport = process.env.NODE_ENV === "production" ? null : new DailyRotateFile({
   filename: path.join(__dirname, "../../logs/application-%DATE%.log"),
   datePattern: "YYYY-MM-DD",
   maxSize: "20m",
@@ -50,8 +50,8 @@ const fileRotateTransport = new DailyRotateFile({
   format: fileFormat,
 });
 
-// Transporte para errores
-const errorFileTransport = new DailyRotateFile({
+// Transporte para errores (solo en desarrollo)
+const errorFileTransport = process.env.NODE_ENV === "production" ? null : new DailyRotateFile({
   filename: path.join(__dirname, "../../logs/error-%DATE%.log"),
   datePattern: "YYYY-MM-DD",
   maxSize: "20m",
@@ -61,14 +61,18 @@ const errorFileTransport = new DailyRotateFile({
 });
 
 // Crear el logger
+const transports = [new winston.transports.Console({ format })];
+
+// Agregar transportes de archivo solo en desarrollo
+if (process.env.NODE_ENV === "development") {
+  transports.push(fileRotateTransport);
+  transports.push(errorFileTransport);
+}
+
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === "development" ? "debug" : "info",
   levels,
-  transports: [
-    new winston.transports.Console({ format }),
-    fileRotateTransport,
-    errorFileTransport,
-  ],
+  transports,
 });
 
 export default logger;
