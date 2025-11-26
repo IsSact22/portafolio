@@ -77,7 +77,7 @@ export const ContactForm: React.FC = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1  text-black  md:grid-cols-2 gap-6">
                 <Input
                   label="Nombre"
                   type="text"
@@ -104,6 +104,7 @@ export const ContactForm: React.FC = () => {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
+                className="text-black"
                 placeholder="¿De qué quieres hablar?"
                 required
               />
@@ -113,6 +114,7 @@ export const ContactForm: React.FC = () => {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
+                className="text-black"
                 placeholder="Cuéntame sobre tu proyecto..."
                 rows={6}
                 required
