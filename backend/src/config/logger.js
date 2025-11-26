@@ -41,32 +41,39 @@ const fileFormat = winston.format.combine(
   winston.format.json()
 );
 
-// Transporte para archivos con rotación diaria (solo en desarrollo)
-const fileRotateTransport = process.env.NODE_ENV === "production" ? null : new DailyRotateFile({
-  filename: path.join(__dirname, "../../logs/application-%DATE%.log"),
-  datePattern: "YYYY-MM-DD",
-  maxSize: "20m",
-  maxFiles: "14d",
-  format: fileFormat,
-});
-
-// Transporte para errores (solo en desarrollo)
-const errorFileTransport = process.env.NODE_ENV === "production" ? null : new DailyRotateFile({
-  filename: path.join(__dirname, "../../logs/error-%DATE%.log"),
-  datePattern: "YYYY-MM-DD",
-  maxSize: "20m",
-  maxFiles: "30d",
-  level: "error",
-  format: fileFormat,
-});
-
 // Crear el logger
 const transports = [new winston.transports.Console({ format })];
 
-// Agregar transportes de archivo solo en desarrollo
-if (process.env.NODE_ENV === "development") {
-  transports.push(fileRotateTransport);
-  transports.push(errorFileTransport);
+// Agregar transportes de archivo solo en desarrollo (no en Vercel/producción)
+const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
+
+if (!isProduction) {
+  try {
+    // Transporte para archivos con rotación diaria
+    const fileRotateTransport = new DailyRotateFile({
+      filename: path.join(__dirname, "../../logs/application-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "14d",
+      format: fileFormat,
+    });
+
+    // Transporte para errores
+    const errorFileTransport = new DailyRotateFile({
+      filename: path.join(__dirname, "../../logs/error-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "30d",
+      level: "error",
+      format: fileFormat,
+    });
+
+    transports.push(fileRotateTransport);
+    transports.push(errorFileTransport);
+  } catch (error) {
+    // Si falla (ej: sistema de archivos de solo lectura), solo usar consola
+    console.warn("File logging disabled:", error.message);
+  }
 }
 
 const logger = winston.createLogger({
