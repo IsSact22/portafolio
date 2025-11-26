@@ -41,34 +41,45 @@ const fileFormat = winston.format.combine(
   winston.format.json()
 );
 
-// Transporte para archivos con rotación diaria
-const fileRotateTransport = new DailyRotateFile({
-  filename: path.join(__dirname, "../../logs/application-%DATE%.log"),
-  datePattern: "YYYY-MM-DD",
-  maxSize: "20m",
-  maxFiles: "14d",
-  format: fileFormat,
-});
-
-// Transporte para errores
-const errorFileTransport = new DailyRotateFile({
-  filename: path.join(__dirname, "../../logs/error-%DATE%.log"),
-  datePattern: "YYYY-MM-DD",
-  maxSize: "20m",
-  maxFiles: "30d",
-  level: "error",
-  format: fileFormat,
-});
-
 // Crear el logger
+const transports = [new winston.transports.Console({ format })];
+
+// Agregar transportes de archivo solo en desarrollo (no en Vercel/producción)
+const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
+
+if (!isProduction) {
+  try {
+    // Transporte para archivos con rotación diaria
+    const fileRotateTransport = new DailyRotateFile({
+      filename: path.join(__dirname, "../../logs/application-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "14d",
+      format: fileFormat,
+    });
+
+    // Transporte para errores
+    const errorFileTransport = new DailyRotateFile({
+      filename: path.join(__dirname, "../../logs/error-%DATE%.log"),
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "30d",
+      level: "error",
+      format: fileFormat,
+    });
+
+    transports.push(fileRotateTransport);
+    transports.push(errorFileTransport);
+  } catch (error) {
+    // Si falla (ej: sistema de archivos de solo lectura), solo usar consola
+    console.warn("File logging disabled:", error.message);
+  }
+}
+
 const logger = winston.createLogger({
   level: process.env.NODE_ENV === "development" ? "debug" : "info",
   levels,
-  transports: [
-    new winston.transports.Console({ format }),
-    fileRotateTransport,
-    errorFileTransport,
-  ],
+  transports,
 });
 
 export default logger;
